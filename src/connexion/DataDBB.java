@@ -7,7 +7,7 @@ public class DataDBB {
 
         url = "jdbc:mysql://localhost:3306/captainbdd";
         user = "root";
-        passwd = "xxxxxx";
+        passwd = "Pierrot31!";
 
     }
     public String useURL(){

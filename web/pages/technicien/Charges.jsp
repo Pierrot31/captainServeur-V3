@@ -126,32 +126,45 @@
                                         response.sendError(500, "Exception sur l'accès à la BDD ");
                                     }else {
                                         Statement stmt = conn.createStatement();
-                                        String requete = "SELECT nom \n" +
+                                        String requete = "SELECT idboitier, nom \n" +
                                                 "\tFROM captainbdd.boitierprimaire \n" +
                                                 "    WHERE boitierprimaire.idboitier IS NOT NULL\n" +
                                                 "    ORDER BY idboitier;";
                                         ResultSet requestResult = stmt.executeQuery(requete);
                                         System.out.print(requestResult);
                                         if (requestResult != null) {
+
                                             while (requestResult.next()) {
-                                                String boitier = requestResult.getString(1);
+                                                String idboitierprimaire = requestResult.getString(1);
+                                                String boitier = requestResult.getString(2);
                             %>
-                            <tr class="treegrid-1">
-
-                                <td> <%out.print(boitier);%></td>
-                            </tr>
+                                               <tr class="treegrid-1">
+                                                    <td> <%out.print(boitier);%></td>
+                                                </tr>
                             <%
-                                            }
+                                                String requete1 = String.format("SELECT nom \n" +
+                                                        "\tFROM captainbdd.boitiersecondaire \n" +
+                                                        "    WHERE boitierprimaire.idboitier= '%s' AND idboitiersec IS NOT NULL \n" +
+                                                        "    ORDER BY idboitiersec;",idboitierprimaire);
+                                                ResultSet requestResult1 = stmt.executeQuery(requete1);
+                                                if (requestResult1 != null) {
+                                                    while (requestResult1.next()) {
+                                                        String nomboitiersecondaire = requestResult1.getString(1);
+                            %>
+                                                        <tr class="treegrid-2 treegrid-parent-1">
+                                                            <td><%out.print(nomboitiersecondaire);%></td>
+                                                        </tr>
+                            <%
+                                                     }
 
+                                                }
+                                            }
                                         }
                                     }
-                                }catch(Exception e1){
-                                    e1.printStackTrace();
+                                }catch(Exception e){
+                                    e.printStackTrace();
                                 }
                             %>
-                            <tr class="treegrid-2 treegrid-parent-1">
-                                <td> tt</td>
-                            </tr>
                             <tr class="treegrid-3 treegrid-parent-2">
                                 <td>
                                     <ul>
@@ -501,6 +514,22 @@
         },
         slide: function(e){
         }
+    });
+</script>
+<script>
+    $(function () {
+        // 6 create an instance when the DOM is ready
+        $('#jstree').jstree();
+        // 7 bind to events triggered on the tree
+        $('#jstree').on("changed.jstree", function (e, data) {
+            console.log(data.selected);
+        });
+        // 8 interact with the tree - either way is OK
+        $('button').on('click', function () {
+            $('#jstree').jstree(true).select_node('child_node_1');
+            $('#jstree').jstree('select_node', 'child_node_1');
+            $.jstree.reference('#jstree').select_node('child_node_1');
+        });
     });
 </script>
 </body>

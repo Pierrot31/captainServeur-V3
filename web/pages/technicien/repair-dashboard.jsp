@@ -3,6 +3,7 @@
 <%@ page import="java.sql.Statement" %>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.sql.SQLException" %>
+<%@ page import="java.util.Objects" %>
 <%--
   Created by IntelliJ IDEA.
   User: pierr_000
@@ -37,6 +38,8 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../vendor/bootstrap/css/bootstrap2-toggle.min.css" rel="stylesheet">
+
 
     <!-- MetisMenu CSS -->
     <link href="../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
@@ -101,7 +104,7 @@
 
 
 
-    <div id="page" style="margin-left: 1%" style="margin-right: 1%" >
+    <div id="page" style="margin-left: 1%; margin-right: 1%" >
 
         <div class="row" style="margin-top: 15px" > </div>
         <div class="row">
@@ -212,10 +215,7 @@
                                             response.sendError(500, "Exception sur l'accès à la BDD ");
                                         }else {
                                             Statement stmt = conn.createStatement();
-                                            String requete = "SELECT idcharge,nom,etat \n" +
-                                                    "\tFROM captainbdd.charge \n" +
-                                                    "    WHERE charge.idcharge IS NOT NULL\n" +
-                                                    "    GROUP BY idcharge" ;
+                                            String requete = "SELECT idcharge,nom,etat FROM captainbdd.charge WHERE charge.idcharge IS NOT NULL GROUP BY idcharge" ;
                                             ResultSet requestResult = stmt.executeQuery(requete);
                                             if (requestResult != null) {
                                                 while(requestResult.next()) {
@@ -227,9 +227,18 @@
                                     <td><%out.print(idcharge);%></td>
                                     <td><%out.print(nomcharge);%></td>
                                     <td>
-                                        <%out.print(etatcharge);%>
-                                        <p class="fa fa-times-circle"> </p>
-                                        <p class="fa fa-check-circle"> </p>
+                                        <%if(etatcharge.equals("allume")){
+                                            System.out.println("allume");%>
+                                        <label>
+                                            <input checked data-toggle="toggle" data-width="50" data-height="30" data-onstyle="success" data-offstyle="danger" type="checkbox" disabled>
+                                        </label>
+                                        <%}
+                                        if(etatcharge.equals("eteint")){
+                                            System.out.println("eteint");%>
+                                        <label>
+                                            <input data-toggle="toggle" data-width="50" data-height="30" data-onstyle="success" data-offstyle="danger" type="checkbox" disabled>
+                                        </label>
+                                        <%}%>
                                     </td>
                                         <%
                                                 }
@@ -297,6 +306,7 @@
 
 <!-- Bootstrap Core JavaScript -->
 <script src="../../vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../vendor/bootstrap/js/bootstrap2-toggle.min.js"></script>
 
 <!-- Metis Menu Plugin JavaScript -->
 <script src="../../vendor/metisMenu/metisMenu.min.js"></script>
@@ -312,6 +322,17 @@
 
 <script src="../../vendor/flot/jquery.flot.js"></script>
 <script src="../../data/flot-data.js"></script>
+<script>
+    $.fn.extend({
+        switchify: function(e){
+            $(this).each(function(){
+                $(this).hide().after('<label for="'+$(this).attr('id')+'" class="ui-content"><div class="ui-switch-range"><div class="ui-switch-handle"></div></div></label>');
+            });
+        },
+        slide: function(e){
+        }
+    });
+</script>
 
 </body>
 
