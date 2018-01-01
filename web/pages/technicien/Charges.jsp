@@ -142,16 +142,18 @@
                                                     <td> <%out.print(boitier);%></td>
                                                 </tr>
                             <%
-                                                String requete1 = String.format("SELECT nom \n" +
+                                                String requete1 = String.format("SELECT idboitiersec, nom \n" +
                                                         "\tFROM captainbdd.boitiersecondaire \n" +
-                                                        "    WHERE boitierprimaire.idboitier= '%s' AND idboitiersec IS NOT NULL \n" +
+                                                        "    WHERE boitiersecondaire.idboitierprim= '%s' AND idboitiersec IS NOT NULL \n" +
                                                         "    ORDER BY idboitiersec;",idboitierprimaire);
                                                 ResultSet requestResult1 = stmt.executeQuery(requete1);
                                                 if (requestResult1 != null) {
+
                                                     while (requestResult1.next()) {
-                                                        String nomboitiersecondaire = requestResult1.getString(1);
-                            %>
-                                                        <tr class="treegrid-2 treegrid-parent-1">
+                                                        String nomboitiersecondaire = requestResult1.getString(2);
+                                                        int numLigne = requestResult1.getInt(1);
+                                                        System.out.println(numLigne);%>
+                                                        <tr class="treegrid-<%out.print(numLigne+1);%> treegrid-parent-1">
                                                             <td><%out.print(nomboitiersecondaire);%></td>
                                                         </tr>
                             <%
@@ -185,7 +187,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3" style="margin-left: 2%", style="display: none" >
+        <div class="col-lg-3" style="margin-left: 2%; display: none" >
             <div class="row">
                 <div class="panel panel-info" style="display: none" id="charge">
                     <div class="panel-heading ">Charges
@@ -300,38 +302,71 @@
                 <div class="panel-body">
                     <div class="row">
                         <table class="tree">
+                            <%
+                                try{
+                                    System.out.println("conn = "+conn.isClosed());
+                                    if(conn !=null && conn.isClosed()){
+                                        response.sendError(500, "Exception sur l'accès à la BDD ");
+                                    }else {
+                                        Statement stmt = conn.createStatement();
+                                        String requete = "SELECT idboitier, nom \n" +
+                                        "\tFROM captainbdd.boitierprimaire \n" +
+                                        "    WHERE boitierprimaire.idboitier IS NOT NULL\n" +
+                                        "    ORDER BY idboitier;";
+                                        ResultSet requestResult = stmt.executeQuery(requete);
+                                        System.out.print(requestResult);
+                                        if (requestResult != null) {
+
+                                            while (requestResult.next()) {
+                                                String idboitierprimaire = requestResult.getString(1);
+                                                String boitier = requestResult.getString(2);
+                            %>
                             <tr class="treegrid-1">
-                                <td> Dijoncteur Principal</td>
+                                    <td><a href="#" onclick="openOption(event, 'primaire')"><%out.print(boitier);%></a></td>
                             </tr>
-                            <tr class="treegrid-2 treegrid-parent-1">
-                                <td> Boitier primaire</td>
-                            </tr>
-                            <tr class="treegrid-3 treegrid-parent-2">
-                                <td>
-                                    <ul>
-                                        <li><a href="#" onclick="openOption(event, 'premier')">Boitier secondaire n°1</a></li>
-                                        <li><a href="#" onclick="openOption(event, 'second')">Boitier secondaire n°2</a></li>
-                                        <li><a href="#" onclick="openOption(event, 'troisieme')">Boitier secondaire n°3</a></li>
-                                    </ul>
-                                </td>
-                            </tr>
+                            <%
+                                                String requete1 = String.format("SELECT idboitiersec, nom \n" +
+                                                        "\tFROM captainbdd.boitiersecondaire \n" +
+                                                        "    WHERE boitiersecondaire.idboitierprim= '%s' AND idboitiersec IS NOT NULL \n" +
+                                                        "    ORDER BY idboitiersec;",idboitierprimaire);
+                                                ResultSet requestResult1 = stmt.executeQuery(requete1);
+                                                if (requestResult1 != null) {
+
+                                                    while (requestResult1.next()) {
+                                                        String nomboitiersecondaire = requestResult1.getString(2);
+                                                        int numLigne = requestResult1.getInt(1);
+                                                        System.out.println(numLigne);%>
+                                                        <tr class="treegrid-<%out.print(numLigne+1);%> treegrid-parent-1">
+                                                            <td><a href="#" onclick="openOption(event, 'secondaire')"><%out.print(nomboitiersecondaire);%></a></td>
+                                                        </tr>
+                            <%
+                                                    }
+
+                                                }
+                                                }
+                                                }
+                                                }
+                                                }catch(Exception e){
+                                                e.printStackTrace();
+                                                }
+                            %>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-3" style="margin-right: 2%", style="display: none" >
+        <div class="col-lg-3" style="margin-right: 2%; display: none" >
             <div class="row">
-                <div class="panel panel-info" style="display: none" id="premier">
-                    <div class="panel-heading ">Boitier secondaire n°1
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="closeOption(event, 'premier')">×</a>
+                <div class="panel panel-info" name="tata" id="primaire" style="display: none">
+                    <div class="panel-heading ">Boitier primaire
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="closeOption(event, 'primaire')">×</a>
                     </div>
                     <div class="panel-body">
                         <form role="form">
                             <fieldset>
                                 <div class="form-group">
-                                    <h1>Boitier secondaire n°1</h1>
+                                    <h1>Boitier primaire</h1>
                                 </div>
                                 <div class="form-group has-success">
                                     <label class="control-label">Etat</label>
@@ -349,23 +384,21 @@
                                     <label class="control-label" >Catégorie</label>
                                     <input type="text" class="form-control" id="categoriepremier">
                                 </div>
-                                <div class="form-group has-success">
-                                    <label class="control-label" >Dijoncteur concerné</label>
-                                    <input type="text" class="form-control" id="Dijoncteurpremier">
-                                </div>
                             </fieldset>
                         </form>
                     </div>
                 </div>
-                <div class="panel panel-info" style="display: none;" id="second">
-                    <div class="panel-heading ">Boitier secondaire n°2
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="closeOption(event, 'second')">×</a>
+            </div>
+            <div class="row">
+                <div class="panel panel-info" style="display: none;" id="secondaire">
+                    <div class="panel-heading ">Boitier secondaire
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="closeOption(event, 'secondaire')">×</a>
                     </div>
                     <div class="panel-body">
                         <form role="form">
                             <fieldset>
                                 <div class="form-group">
-                                    <h1>Boitier secondaire n°2</h1>
+                                    <h1>Boitier secondaire</h1>
                                 </div>
                                 <div class="form-group has-success">
                                     <label class="control-label">Etat</label>
@@ -391,39 +424,6 @@
                         </form>
                     </div>
                 </div>
-                <div class="panel panel-info" style="display: none;" id="troisieme">
-                    <div class="panel-heading ">Boitier secondaire n°3
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="closeOption(event, 'troisieme')">×</a>
-                    </div>
-                    <div class="panel-body">
-                        <form role="form">
-                            <fieldset>
-                                <div class="form-group">
-                                    <h1>Boitier secondaire n°3</h1>
-                                </div>
-                                <div class="form-group has-success">
-                                    <label class="control-label">Etat</label>
-                                    <input type="text" class="form-control" id="etattroisieme">
-                                </div>
-                                <div class="form-group has-success">
-                                    <label class="control-label" >Consommation</label>
-                                    <input type="text" class="form-control" id="consommationtroisieme">
-                                </div>
-                                <div class="form-group has-success">
-                                    <label class="control-label" >Groupe</label>
-                                    <input type="text" class="form-control" id="groupetroisieme">
-                                </div>
-                                <div class="form-group has-success">
-                                    <label class="control-label" >Catégorie</label>
-                                    <input type="text" class="form-control" id="categorietroisieme">
-                                </div>
-                                <div class="form-group has-success">
-                                    <label class="control-label" >Dijoncteur concerné</label>
-                                    <input type="text" class="form-control" id="Dijoncteurtroisieme">
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
@@ -476,17 +476,15 @@
     });
 
     function openOption(evt, optionName) {
-
         document.getElementById(optionName).style.display = "block";
         evt.currentTarget.className += " active";
     }
+
     function closeOption(evt, optionName) {
         document.getElementById(optionName).style.display = "none";
         evt.currentTarget.className += " active";
     }
-</script>
 
-<script>
     function openSideOption(evt, chargeName) {
         // Declare all variables
         var i, tabcontent, tablinks;
@@ -504,8 +502,8 @@
         document.getElementById(chargeName).style.display = "block";
         evt.currentTarget.className += " active";
     }
-</script>
-<script>
+
+
     $.fn.extend({
         switchify: function(e){
             $(this).each(function(){
@@ -515,8 +513,8 @@
         slide: function(e){
         }
     });
-</script>
-<script>
+
+
     $(function () {
         // 6 create an instance when the DOM is ready
         $('#jstree').jstree();
