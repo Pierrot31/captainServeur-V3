@@ -108,10 +108,10 @@
 
 
 
-<div id="page" style="margin-left: 1%" style="margin-right: 1%">
+<!--<div id="page" style="margin-left: 1%" style="margin-right: 1%">
     <div class="row" style="margin-top: 15px "> </div>
     <div class ="row" style="margin-left: 2%" >
-        <div class="col-lg-2">
+       <!--<div class="col-lg-2">
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <p>Charges</p>
@@ -119,30 +119,32 @@
                 <div class="panel-body">
                     <div class="row">
                         <table class="tree">
-                            <%
+                          <!--
+                              /*  Statement stmt = null;
+                                ResultSet requestResult = null;
+
                                 try{
                                     System.out.println("conn = "+conn.isClosed());
                                     if(conn !=null && conn.isClosed()){
                                         response.sendError(500, "Exception sur l'accès à la BDD ");
                                     }else {
-                                        Statement stmt = conn.createStatement();
+                                        stmt = conn.createStatement();
                                         String requete = "SELECT idboitier, nom \n" +
                                                 "\tFROM captainbdd.boitierprimaire \n" +
                                                 "    WHERE boitierprimaire.idboitier IS NOT NULL\n" +
                                                 "    ORDER BY idboitier;";
-                                        ResultSet requestResult = stmt.executeQuery(requete);
+                                        requestResult = stmt.executeQuery(requete);
                                         System.out.print(requestResult);
                                         if (requestResult != null) {
-
                                             while (requestResult.next()) {
                                                 String idboitierprimaire = requestResult.getString(1);
                                                 String boitier = requestResult.getString(2);
                             %>
                                                <tr class="treegrid-1">
-                                                    <td> <%out.print(boitier);%></td>
+                                                    <td> </td>
                                                 </tr>
-                            <%
-                                                String requete1 = String.format("SELECT idboitiersec, nom \n" +
+
+                                      /*          String requete1 = String.format("SELECT idboitiersec, nom \n" +
                                                         "\tFROM captainbdd.boitiersecondaire \n" +
                                                         "    WHERE boitiersecondaire.idboitierprim= '%s' AND idboitiersec IS NOT NULL \n" +
                                                         "    ORDER BY idboitiersec;",idboitierprimaire);
@@ -152,21 +154,19 @@
                                                     while (requestResult1.next()) {
                                                         String nomboitiersecondaire = requestResult1.getString(2);
                                                         int numLigne = requestResult1.getInt(1);
-                                                        System.out.println(numLigne);%>
-                                                        <tr class="treegrid-<%out.print(numLigne+1);%> treegrid-parent-1">
-                                                            <td><%out.print(nomboitiersecondaire);%></td>
+                                                        System.out.println(numLigne);
+                                                        <tr class="treegrid-treegrid-parent-1">
+                                                            <td></td>
                                                         </tr>
-                            <%
+
                                                      }
 
                                                 }
                                             }
                                         }
                                     }
-                                }catch(Exception e){
-                                    e.printStackTrace();
-                                }
-                            %>
+
+
                             <tr class="treegrid-3 treegrid-parent-2">
                                 <td>
                                     <ul>
@@ -291,8 +291,20 @@
                         </form>
                     </div>
                 </div>
+
+                    }finally {
+                        try{
+                        stmt.close();
+                        requestResult.close();
+                        conn.close();
+                        }
+                        catch(SQLException e){
+                        System.out.println(e.getMessage());
+                        }
+                    }
+                %>
             </div>
-        </div>
+        </div>-->
 
         <div class="col-lg-2">
             <div class="panel panel-info">
