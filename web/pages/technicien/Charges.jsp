@@ -309,46 +309,52 @@
                                         response.sendError(500, "Exception sur l'accès à la BDD ");
                                     }else {
                                         Statement stmt = conn.createStatement();
-                                        String requete = "SELECT idboitier, nom \n" +
+                                        String requete = "SELECT nom \n" +
                                         "\tFROM captainbdd.boitierprimaire \n" +
                                         "    WHERE boitierprimaire.idboitier IS NOT NULL\n" +
                                         "    ORDER BY idboitier;";
                                         ResultSet requestResult = stmt.executeQuery(requete);
-                                        System.out.print(requestResult);
                                         if (requestResult != null) {
-
                                             while (requestResult.next()) {
-                                                String idboitierprimaire = requestResult.getString(1);
-                                                String boitier = requestResult.getString(2);
+                                                String boitier = requestResult.getString(1);
+
                             %>
                             <tr class="treegrid-1">
                                     <td><a href="#" onclick="openOption(event, 'primaire')"><%out.print(boitier);%></a></td>
                             </tr>
                             <%
-                                                String requete1 = String.format("SELECT idboitiersec, nom \n" +
+                                    }
+                                }
+                                stmt.close();
+                                }
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
+                                try {
+                                                Statement stmt1 = conn.createStatement();
+                                                String requete1 = "SELECT idboitierprim,  idboitiersec, nom \n" +
                                                         "\tFROM captainbdd.boitiersecondaire \n" +
-                                                        "    WHERE boitiersecondaire.idboitierprim= '%s' AND idboitiersec IS NOT NULL \n" +
-                                                        "    ORDER BY idboitiersec;",idboitierprimaire);
-                                                ResultSet requestResult1 = stmt.executeQuery(requete1);
+                                                        "    WHERE boitiersecondaire.idboitierprim\n" +
+                                                        "    IN ( \n" +
+                                                        "    SELECT idboitier FROM boitierprimaire)\n"+
+                                                        "    AND idboitiersec IS NOT NULL \n" +
+                                                        "    ORDER BY idboitiersec;";
+                                                ResultSet requestResult1 = stmt1.executeQuery(requete1);
                                                 if (requestResult1 != null) {
-
                                                     while (requestResult1.next()) {
-                                                        String nomboitiersecondaire = requestResult1.getString(2);
-                                                        int numLigne = requestResult1.getInt(1);
+                                                        String nomboitiersecondaire = requestResult1.getString(3);
+                                                        int numLigne = requestResult1.getInt(2);
                                                         System.out.println(numLigne);%>
                                                         <tr class="treegrid-<%out.print(numLigne+1);%> treegrid-parent-1">
                                                             <td><a href="#" onclick="openOption(event, 'secondaire')"><%out.print(nomboitiersecondaire);%></a></td>
                                                         </tr>
                             <%
                                                     }
-
-                                                }
-                                                }
-                                                }
-                                                }
-                                                }catch(Exception e){
-                                                e.printStackTrace();
-                                                }
+                                }
+                                stmt1.close();
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
                             %>
                         </table>
                     </div>
