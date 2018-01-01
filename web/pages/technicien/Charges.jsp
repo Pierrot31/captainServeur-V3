@@ -303,57 +303,56 @@
                     <div class="row">
                         <table class="tree">
                             <%
-                                try{
-                                    System.out.println("conn = "+conn.isClosed());
-                                    if(conn !=null && conn.isClosed()){
-                                        response.sendError(500, "Exception sur l'accès à la BDD ");
-                                    }else {
-                                        Statement stmt = conn.createStatement();
-                                        String requete = "SELECT nom \n" +
-                                        "\tFROM captainbdd.boitierprimaire \n" +
-                                        "    WHERE boitierprimaire.idboitier IS NOT NULL\n" +
-                                        "    ORDER BY idboitier;";
-                                        ResultSet requestResult = stmt.executeQuery(requete);
-                                        if (requestResult != null) {
-                                            while (requestResult.next()) {
-                                                String boitier = requestResult.getString(1);
-
-                            %>
-                            <tr class="treegrid-1">
-                                    <td><a href="#" onclick="openOption(event, 'primaire')"><%out.print(boitier);%></a></td>
-                            </tr>
-                            <%
-                                    }
-                                }
-                                stmt.close();
-                                }
-                                }catch(Exception e){
-                                    e.printStackTrace();
-                                }
+                                ResultSet requestResult1 = null;
+                                Statement stmt1 = null;
                                 try {
-                                                Statement stmt1 = conn.createStatement();
-                                                String requete1 = "SELECT idboitierprim,  idboitiersec, nom \n" +
-                                                        "\tFROM captainbdd.boitiersecondaire \n" +
-                                                        "    WHERE boitiersecondaire.idboitierprim\n" +
-                                                        "    IN ( \n" +
-                                                        "    SELECT idboitier FROM boitierprimaire)\n"+
-                                                        "    AND idboitiersec IS NOT NULL \n" +
-                                                        "    ORDER BY idboitiersec;";
-                                                ResultSet requestResult1 = stmt1.executeQuery(requete1);
-                                                if (requestResult1 != null) {
-                                                    while (requestResult1.next()) {
-                                                        String nomboitiersecondaire = requestResult1.getString(3);
-                                                        int numLigne = requestResult1.getInt(2);
+                                    stmt1 = conn.createStatement();
+                                    String requete = "SELECT prim.idboitier, prim.nom, sec.idboitiersec, sec.nom \n" +
+                                            "\tFROM  captainbdd.boitierprimaire AS prim, captainbdd.boitiersecondaire AS sec \n" +
+                                            "    WHERE idboitierprim\n" +
+                                            "    IN ( \n" +
+                                            "    SELECT idboitier FROM boitierprimaire)\n"+
+                                            "    AND idboitiersec IS NOT NULL \n" +
+                                            "    ORDER BY idboitiersec;";
+                                    requestResult1 = stmt1.executeQuery(requete);
+                                    if (requestResult1 != null) {
+                                        while (requestResult1.next()) {
+                                            if(requestResult1.isFirst()){
+                                                String nomboitierprimaire = requestResult1.getString(2);
+                                                String nomboitiersecondaire = requestResult1.getString(4);
+                                                int numLigne = requestResult1.getInt(3);
+                                                System.out.println(numLigne);%>
+                                                <tr class="treegrid-1">
+                                                        <td><a href="#" onclick="openOption(event, 'primaire')"><%out.print(nomboitierprimaire);%></a></td>
+                                                </tr>
+                                                <tr class="treegrid-<%out.print(numLigne+1);%> treegrid-parent-1">
+                                                    <td><a href="#" onclick="openOption(event, 'secondaire')"><%out.print(nomboitiersecondaire);%></a></td>
+                                                </tr>
+                                                <%
+                                                    }else{
+                                                        String nomboitiersecondaire = requestResult1.getString(4);
+                                                        int numLigne = requestResult1.getInt(3);
                                                         System.out.println(numLigne);%>
                                                         <tr class="treegrid-<%out.print(numLigne+1);%> treegrid-parent-1">
                                                             <td><a href="#" onclick="openOption(event, 'secondaire')"><%out.print(nomboitiersecondaire);%></a></td>
                                                         </tr>
                             <%
                                                     }
-                                }
-                                stmt1.close();
-                                }catch(Exception e){
+                                            }
+                                    }
+                                }/*catch(Exception e){
                                     e.printStackTrace();
+                                }*/
+                                finally{
+                                    try{
+                                        //close(stmt1,requestResult1,conn);
+                                        stmt1.close();
+                                        requestResult1.close();
+                                        conn.close();
+                                    }
+                                    catch(SQLException e){
+                                        System.out.println(e.getMessage());
+                                    }
                                 }
                             %>
                         </table>
@@ -364,9 +363,9 @@
 
         <div class="col-lg-3" style="margin-right: 2%; display: none" >
             <div class="row">
-                <div class="panel panel-info" name="tata" id="primaire" style="display: none">
+                <div class="panel panel-info" id="primaire" style="display: none">
                     <div class="panel-heading ">Boitier primaire
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="closeOption(event, 'primaire')">×</a>
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="closeOption(event, 'numboitierprim')">×</a>
                     </div>
                     <div class="panel-body">
                         <form role="form">
