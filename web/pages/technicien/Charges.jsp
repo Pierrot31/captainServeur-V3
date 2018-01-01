@@ -340,20 +340,6 @@
                                                     }
                                             }
                                     }
-                                }/*catch(Exception e){
-                                    e.printStackTrace();
-                                }*/
-                                finally{
-                                    try{
-                                        //close(stmt1,requestResult1,conn);
-                                        stmt1.close();
-                                        requestResult1.close();
-                                        conn.close();
-                                    }
-                                    catch(SQLException e){
-                                        System.out.println(e.getMessage());
-                                    }
-                                }
                             %>
                         </table>
                     </div>
@@ -431,6 +417,20 @@
                 </div>
                 </div>
             </div>
+        <%
+            }catch (Exception e){
+                e.getStackTrace();
+            }finally {
+                try{
+                    stmt1.close();
+                    requestResult1.close();
+                    conn.close();
+                }
+                catch(SQLException e){
+                    System.out.println(e.getMessage());
+                }
+            }
+        %>
         </div>
     </div>
 </div>

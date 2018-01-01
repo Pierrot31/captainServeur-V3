@@ -139,7 +139,7 @@
             <div class="col-lg-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Categories
+                        Groupes de Charges
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
@@ -154,33 +154,47 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <%
+                                    try{
+                                        System.out.println("conn = "+conn.isClosed());
+                                        if(conn !=null && conn.isClosed()){
+                                            response.sendError(500, "Exception sur l'accès à la BDD ");
+                                        }else {
+                                            Statement stmt = conn.createStatement();
+                                            String requete = "SELECT idgroupecharge,nom,etat FROM captainbdd.groupecharge WHERE groupecharge.idgroupecharge IS NOT NULL GROUP BY idgroupecharge" ;
+                                            ResultSet requestResult = stmt.executeQuery(requete);
+                                            if (requestResult != null) {
+                                                while(requestResult.next()) {
+                                                    String idgroupecharge = requestResult.getString(1);
+                                                    String nomgroupecharge = requestResult.getString(2);
+                                                    String etatgroupecharge = requestResult.getString(3);
+                                %>
                                 <tr>
-                                    <td>1</td>
-                                    <td>Mark</td>
+                                    <td><%out.print(idgroupecharge);%></td>
+                                    <td><%out.print(nomgroupecharge);%></td>
                                     <td>
-                                        <p class="fa fa-times-circle"> </p>
-                                        <p class="fa fa-check-circle"> </p>
+                                        <%if(etatgroupecharge.equals("allume")){
+                                            System.out.println("allume");%>
+                                        <label>
+                                            <input checked data-toggle="toggle" data-width="50" data-height="30" data-onstyle="success" data-offstyle="danger" type="checkbox" disabled>
+                                        </label>
+                                        <%}
+                                            if(etatgroupecharge.equals("eteint")){
+                                                System.out.println("eteint");%>
+                                        <label>
+                                            <input data-toggle="toggle" data-width="50" data-height="30" data-onstyle="success" data-offstyle="danger" type="checkbox" disabled>
+                                        </label>
+                                        <%}%>
                                     </td>
+                                        <%
+                                                }
 
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>
-                                        <p class="fa fa-times-circle"> </p>
-                                        <p class="fa fa-check-circle"> </p>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Larry</td>
-                                    <td>
-                                        <p class="fa fa-times-circle"> </p>
-                                        <p class="fa fa-check-circle"> </p>
-                                    </td>
-
-                                </tr>
+                                            }
+                                        }
+                                    }catch(Exception e1){
+                                        e1.printStackTrace();
+                                        }
+                                %>
                                 </tbody>
                             </table>
                         </div>
