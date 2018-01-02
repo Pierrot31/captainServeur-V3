@@ -111,7 +111,7 @@
                         <th>Nom</th>
                         <!--<th>Consommation</th>-->
                         <th>Etat</th>
-                        <th>Categorie</th>
+                        <!--<th>Categorie</th>-->
 
                     </tr>
                     </thead>
@@ -133,13 +133,13 @@
                                         String idgroupecharge = requestResult.getString(1);
                                         String nomgroupecharge = requestResult.getString(2);
                                         String etatgroupecharge = requestResult.getString(3);
-                                        String categoriegroupecharge = requestResult.getString(4);
+                                        //String categoriegroupecharge = requestResult.getString(4);
                                         //int consommationgroupecharge = requestResult.getInt(4);
                     %>
                     <tr>
                         <td><%out.print(idgroupecharge);%></td>
                         <td><%out.print(nomgroupecharge);%></td>
-                        <!--<td><%//out.print(consommationgroupecharge);%></td>-->
+                        <!--<td><//out.print(consommationgroupecharge);%></td>-->
                         <td>
                             <%if(etatgroupecharge.equals("allume")){
                                 System.out.println("allume");%>
@@ -154,7 +154,7 @@
                             </label>
                             <%}%>
                         </td>
-                        <td><%out.print(categoriegroupecharge);%></td>
+                        <!--<td><//out.print(categoriegroupecharge);%></td>-->
                             <%
                                                 }
 
@@ -175,7 +175,7 @@
         <div class="col-lg-8" style="margin-left: 10%">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Charges/Selection Categorie
+                    Charges/Selection groupe de Charges
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -187,8 +187,9 @@
                                 <th>Nom charge</th>
                                 <th>Etat charge</th>
                                 <th>Dijoncteur Concerné n°</th>
-                                <th>Catégorie</th>
-                                <th>priorité</th>
+                                <!--<th>Catégorie</th>-->
+                                <th>Localisation</th>
+                                <!--<th>priorité</th>-->
                                 <th>Calibre</th>
                                 <th>puissance</th>
                                 <!--<th>Consommation</th>-->
@@ -202,7 +203,7 @@
                                         response.sendError(500, "Exception sur l'accès à la BDD ");
                                     }else {
                                         Statement stmt1 = conn.createStatement();
-                                        String requete = " SELECT charge.idcharge,  charge.nom, charge.etat, charge.calibre, charge.priorite, charge.puissance, charge.consommation, bs.nom AS Dijoncteur , categorie.nom AS Categorie\n" +
+                                        String requete = " SELECT charge.idcharge,  charge.nom, charge.etat, charge.localisation, charge.calibre, charge.puissance, bs.nom AS Dijoncteur , categorie.nom AS Categorie\n" +
                                                 "                            FROM captainbdd.charge AS charge, captainbdd.groupecharge_charge AS gc, captainbdd.categorie_charge AS cc, captainbdd.boitiersecondaire AS bs, captainbdd.categorie AS categorie\n" +
                                                 "                            WHERE charge.idcharge IS NOT NULL AND gc.idcharge IS NOT NULL AND cc.idcharge IS NOT NULL AND cc.idcharge = charge.idcharge = gc.idcharge AND bs.idboitiersec = charge.idboitiersec AND categorie.idcategorie = cc.idcategorie\n" +
                                                 "                            ORDER BY charge.idcharge;" ;
@@ -212,12 +213,11 @@
                                                 String idcharge = requestResult1.getString(1);
                                                 String nomcharge = requestResult1.getString(2);
                                                 String etatcharge = requestResult1.getString(3);
-                                                int calibrecharge = requestResult1.getInt(4);
-                                                int prioritecharge = requestResult1.getInt(5);
+                                                String localisationcharge = requestResult1.getString(4);
+                                                int calibrecharge = requestResult1.getInt(5);
                                                 int puissancecharge = requestResult1.getInt(6);
-                                                //int consommationcharge = requestResult1.getInt(7);
-                                                String dijoncteur = requestResult1.getString(8);
-                                                String categorie = requestResult1.getString(9);
+                                                String dijoncteur = requestResult1.getString(7);
+                                                //String categorie = requestResult1.getString(8);
                             %>
                             <tr>
                                 <td><%out.print(idcharge);%></td>
@@ -237,11 +237,12 @@
                                     <%}%>
                                 </td>
                                 <td><%out.print(dijoncteur);%></td>
-                                <td><%out.print(categorie);%></td>
-                                <td><%out.print(prioritecharge);%></td>
+                                <!--<td><//out.print(categorie);%></td>-->
+                                <td><%out.print(localisationcharge);%></td>
+                                <!--<td></*out.print(prioritecharge);*/%></td>-->
                                 <td><%out.print(calibrecharge);%></td>
                                 <td><%out.print(puissancecharge);%></td>
-                                <!--<td><%//out.print(consommationcharge);%></td>-->
+                                <!--<td><//out.print(consommationcharge);%></td>-->
                                     <%
                                                 }
 
