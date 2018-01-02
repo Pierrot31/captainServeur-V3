@@ -89,10 +89,10 @@
                 <a class="link " href="repair-dashboard.jsp"><i class="fa fa-dashboard"></i> Tableau de bord</a>
             </li>
             <li class="navbar-link">
-                <a class="link"  href="Charges.jsp"><i class="fa fa-bolt"></i> Groupes de charges</a>
+                <a class="link"  href="Charges.jsp"><i class="fa fa-bolt"></i> Charges</a>
             </li>
             <li class="navbar-link">
-                <a class="link"  href="Categories.jsp"><i class="fa fa-bolt"></i> Categories</a>
+                <a class="link"  href="groupedecharges.jsp"><i class="fa fa-bolt"></i> Groupes de charges</a>
             </li>
 
         </ul>
