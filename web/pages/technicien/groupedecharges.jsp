@@ -108,9 +108,10 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th>Noms</th>
-                        <th>Consommation</th>
-                        <th>Etats</th>
+                        <th>Nom</th>
+                        <!--<th>Consommation</th>-->
+                        <th>Etat</th>
+                        <th>Categorie</th>
 
                     </tr>
                     </thead>
@@ -122,13 +123,17 @@
                                 response.sendError(500, "Exception sur l'accès à la BDD ");
                             }else {
                                 Statement stmt = conn.createStatement();
-                                String requete = "SELECT idgroupecharge,nom,etat,consommation FROM captainbdd.groupecharge WHERE groupecharge.idgroupecharge IS NOT NULL GROUP BY idgroupecharge" ;
+                                String requete = "SELECT groupecharge.idgroupecharge , groupecharge.nom AS Nom, groupecharge.etat AS Etat, categorie.nom AS Categorie\n" +
+                                        " FROM captainbdd.groupecharge AS groupecharge, captainbdd.categorie_groupecharge AS cgc, captainbdd.categorie AS categorie\n" +
+                                        " WHERE groupecharge.idgroupecharge IS NOT NULL AND groupecharge.idgroupecharge = cgc.idgroupecharge AND cgc.idcategorie = categorie.nom\n" +
+                                        " ORDER BY groupecharge.idgroupecharge;" ;
                                 ResultSet requestResult = stmt.executeQuery(requete);
                                 if (requestResult != null) {
                                     while(requestResult.next()) {
                                         String idgroupecharge = requestResult.getString(1);
                                         String nomgroupecharge = requestResult.getString(2);
                                         String etatgroupecharge = requestResult.getString(3);
+                                        String categoriegroupecharge = requestResult.getString(4);
                                         //int consommationgroupecharge = requestResult.getInt(4);
                     %>
                     <tr>
@@ -149,6 +154,7 @@
                             </label>
                             <%}%>
                         </td>
+                        <td><%out.print(categoriegroupecharge);%></td>
                             <%
                                                 }
 
@@ -185,7 +191,7 @@
                                 <th>priorité</th>
                                 <th>Calibre</th>
                                 <th>puissance</th>
-                                <th>Consommation</th>
+                                <!--<th>Consommation</th>-->
                             </tr>
                             </thead>
                             <tbody>
