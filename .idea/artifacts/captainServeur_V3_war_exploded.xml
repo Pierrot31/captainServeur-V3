@@ -2,10 +2,10 @@
   <artifact type="exploded-war" name="captainServeur-V3:war exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/captainServeur_V3_war_exploded</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="captainServeur-V3/web/Web" />
+      <element id="javaee-facet-resources" facet="captainServeur/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="captainServeur-V3" />
+          <element id="module-output" name="captainServeur" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="mysql-connector-java-5.1.44-bin" />
