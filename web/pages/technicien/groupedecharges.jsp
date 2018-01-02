@@ -129,12 +129,12 @@
                                         String idgroupecharge = requestResult.getString(1);
                                         String nomgroupecharge = requestResult.getString(2);
                                         String etatgroupecharge = requestResult.getString(3);
-                                        int consommationgroupecharge = requestResult.getInt(4);
+                                        //int consommationgroupecharge = requestResult.getInt(4);
                     %>
                     <tr>
                         <td><%out.print(idgroupecharge);%></td>
                         <td><%out.print(nomgroupecharge);%></td>
-                        <td><%out.print(consommationgroupecharge);%></td>
+                        <!--<td><%//out.print(consommationgroupecharge);%></td>-->
                         <td>
                             <%if(etatgroupecharge.equals("allume")){
                                 System.out.println("allume");%>
@@ -209,7 +209,7 @@
                                                 int calibrecharge = requestResult1.getInt(4);
                                                 int prioritecharge = requestResult1.getInt(5);
                                                 int puissancecharge = requestResult1.getInt(6);
-                                                int consommationcharge = requestResult1.getInt(7);
+                                                //int consommationcharge = requestResult1.getInt(7);
                                                 String dijoncteur = requestResult1.getString(8);
                                                 String categorie = requestResult1.getString(9);
                             %>
@@ -235,7 +235,7 @@
                                 <td><%out.print(prioritecharge);%></td>
                                 <td><%out.print(calibrecharge);%></td>
                                 <td><%out.print(puissancecharge);%></td>
-                                <td><%out.print(consommationcharge);%></td>
+                                <!--<td><%//out.print(consommationcharge);%></td>-->
                                     <%
                                                 }
 
